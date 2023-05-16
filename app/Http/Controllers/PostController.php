@@ -1,13 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
-class LoginController extends Controller
+class PostController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,9 +17,9 @@ class LoginController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(array $credentials)
+    public function create()
     {
-        
+        //
     }
 
     /**
@@ -30,7 +27,7 @@ class LoginController extends Controller
      */
     public function store(Request $request)
     {
-       
+        //
     }
 
     /**

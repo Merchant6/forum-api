@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Controllers\UserAuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\ResgisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +19,10 @@ use App\Http\Controllers\Auth\ResgisterController;
 //     return $request->user();
 // });
 
-Route::middleware(['json'])->group(function(){
-    Route::post('/register', [ResgisterController::class, 'store']);
-});
+
+Route::post('/register', [UserAuthController::class, 'register']);
+Route::post('/login', [UserAuthController::class, 'login']);
+
+Route::get('/msg', [UserAuthController::class, 'msg'])->middleware('auth:api');
+
 
