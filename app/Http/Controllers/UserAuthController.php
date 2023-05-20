@@ -33,10 +33,10 @@ class UserAuthController extends Controller
         {
             $credentials = $request->all();
             $val = Validator::make($credentials, [
-                'username' => ['required', 'string', 'min:4', 'unique:users'],
-                'email' => ['required', 'string', 'unique:users'],
-                'password' => ['required', 'string', 'min:8', 'max:32'],
-                'confirm_password' => ['required', 'string', 'same:password'] 
+                'username' => ['required', 'string', 'min:4', 'unique:users', 'regex:/^[A-Za-z0-9]+$/'],
+                'email' => ['required', 'string', 'unique:users', 'email'],
+                'password' => ['required', 'string', 'min:8', 'max:32', 'regex:/^[a-zA-Z0-9!@#$%^&*()]+$/'],
+                'confirm_password' => ['required', 'string', 'same:password', 'regex:/^[a-zA-Z0-9!@#$%^&*()]+$/'] 
             ]);
 
             if(!$val->fails())
@@ -94,8 +94,5 @@ class UserAuthController extends Controller
         return response()->json(['error' => 'Unauthorised'], 401);  
     }
 
-    public function msg()
-    {
-        return 'You are logged in';
-    }
+
 }
