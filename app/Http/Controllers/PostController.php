@@ -6,6 +6,7 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use App\Repositories\PostRepository;
+use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
 {
@@ -37,15 +38,44 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+       try
+       {
+        $data = $request->all();
+        $val = Validator::make($data,[
+            'category_id' => ['required', 'integer'],
+            // 'user_id' => ['required', 'integer'],
+            'title' => ['required', 'string', 'max:100', 'min:10'],
+            'content' => ['required', 'string', 'min:10'],
+            'up_votes' => ['nullable', 'integer'],
+            'down_votes' => ['nullable', 'integer']
+        ]);
+
+        if(!$val->fails())
+        {
+            $this->postRepository->store($data);
+
+            return response()->json([
+                'success' => 'Your post has been added.'
+            ], 200);
+        }
+
+        return response()->json([
+            'error' => 'There was an issue creating your post, try again later.'
+        ], 400);
+       }
+
+       catch(\Exception $e)
+       {
+         return $e->getMessage();
+       }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $slug)
     {
-        //
+        return $this->postRepository->show($slug);
     }
 
     /**

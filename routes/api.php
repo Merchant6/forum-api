@@ -26,6 +26,8 @@ Route::post('/login', [UserAuthController::class, 'login']);
 
 Route::middleware(['auth:api'])->group(function () {
     Route::get('/posts', [PostController::class, 'index']);
+    Route::post('/posts', [PostController::class, 'store']);
+    Route::get('/posts/{slug}', [PostController::class, 'show']);
 });
 
 

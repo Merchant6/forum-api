@@ -19,8 +19,8 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('title');
             $table->string('content');
-            $table->unsignedInteger('up_votes');
-            $table->unsignedInteger('down_votes');
+            $table->unsignedInteger('up_votes')->default(0);
+            $table->unsignedInteger('down_votes')->default(0);
             $table->timestamps();
 
             $table->index(['id', 'title']);

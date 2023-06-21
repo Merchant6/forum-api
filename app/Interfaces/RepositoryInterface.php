@@ -11,9 +11,9 @@ interface RepositoryInterface
 {
     public function all();
 
-    public function store();
+    public function store($data);
 
-    public function show(string $id);
+    public function show(string $slug);
 
     public function update(Request $request, string $id);
 

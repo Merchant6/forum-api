@@ -19,6 +19,7 @@ class Post extends Model
         'user_id',
         'title',
         'content',
+        'slug',
         'up_votes',
         'down_votes'
     ];
