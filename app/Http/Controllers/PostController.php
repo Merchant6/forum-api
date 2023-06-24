@@ -2,27 +2,48 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PostDataRequest;
+use App\Http\Requests\PostDataUpdateRequest;
 use App\Models\Post;
+use App\Traits\RedisHelpers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use App\Repositories\PostRepository;
+use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
 {
+    use RedisHelpers;
     protected $postRepository;
-
-    public function __construct(PostRepository $postRepository)
+    protected $model;
+    /**
+     * Summary of __construct
+     * @param \App\Repositories\PostRepository $postRepository
+     */
+    public function __construct(PostRepository $postRepository, Post $post)
     {
         $this->postRepository = $postRepository;
-    }
+        $this->model = $post;
+    } 
 
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return $this->postRepository->all();
+        
+        if($this->has('post'))
+        {
+            return response()->json([
+                'data' => $this->postRepository->all()
+            ], 200);
+        }
+
+        return response()->json([
+            'error' => 'No posts found'
+        ], 404);
+        
     }
 
     /**
@@ -36,21 +57,14 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(PostDataRequest $request)
     {
        try
        {
         $data = $request->all();
-        $val = Validator::make($data,[
-            'category_id' => ['required', 'integer'],
-            // 'user_id' => ['required', 'integer'],
-            'title' => ['required', 'string', 'max:100', 'min:10'],
-            'content' => ['required', 'string', 'min:10'],
-            'up_votes' => ['nullable', 'integer'],
-            'down_votes' => ['nullable', 'integer']
-        ]);
+        $val = $request->validated();
 
-        if(!$val->fails())
+        if($val)
         {
             $this->postRepository->store($data);
 
@@ -89,9 +103,42 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(PostDataUpdateRequest $request, string $id)
     {
-        //
+        
+            try {
+                $editData = $this->model->findOrFail($id);
+                
+                if($editData)
+                {
+                    $requestData = $request->all();
+                    $val = $request->validated();
+            
+                    if($val)
+                    {
+                        $this->postRepository->update($id, $requestData);
+            
+                        return response()->json([
+                            'success' => 'Your post has been updated.'
+                        ], 200);
+                    }
+            
+                    return response()->json([
+                        'error' => 'There was an issue updating your post, try again later.'
+                    ], 400);
+                }
+                
+                return response()->json([
+                    'error' => 'The post you want to update is removed or hidden.'
+                ], 400);
+            } 
+            
+            catch (\Exception $e) 
+            {
+                return $e->getMessage();
+            }
+       
+        
     }
 
     /**

@@ -15,7 +15,7 @@ interface RepositoryInterface
 
     public function show(string $slug);
 
-    public function update(Request $request, string $id);
+    public function update(string $id, $requestData);
 
     public function destroy(string $id);
 }
