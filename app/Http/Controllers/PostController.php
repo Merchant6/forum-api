@@ -32,18 +32,13 @@ class PostController extends Controller
      */
     public function index()
     {
-        
-        if($this->has('post'))
+        $post = $this->postRepository->all();
+        if($post)
         {
             return response()->json([
-                'data' => $this->postRepository->all()
+                'data' => $post
             ], 200);
         }
-
-        return response()->json([
-            'error' => 'No posts found'
-        ], 404);
-        
     }
 
     /**
@@ -105,39 +100,19 @@ class PostController extends Controller
      */
     public function update(PostDataUpdateRequest $request, string $id)
     {
-        
-            try {
-                $editData = $this->model->findOrFail($id);
+                $requestData = $request->input();
+                $updated =  $this->postRepository->update($id, $requestData);
                 
-                if($editData)
+                if($updated)
                 {
-                    $requestData = $request->all();
-                    $val = $request->validated();
-            
-                    if($val)
-                    {
-                        $this->postRepository->update($id, $requestData);
-            
-                        return response()->json([
-                            'success' => 'Your post has been updated.'
-                        ], 200);
-                    }
-            
                     return response()->json([
-                        'error' => 'There was an issue updating your post, try again later.'
-                    ], 400);
+                        'success' => 'Your post has been updated.'
+                    ], 200);
                 }
-                
+        
                 return response()->json([
                     'error' => 'The post you want to update is removed or hidden.'
                 ], 400);
-            } 
-            
-            catch (\Exception $e) 
-            {
-                return $e->getMessage();
-            }
-       
         
     }
 
@@ -146,6 +121,20 @@ class PostController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+
+            $deleted = $this->postRepository->destroy($id);
+
+            if($deleted)
+            {
+                return response()->json(['success' => 'The post has been deleted'], 200);
+            }
+          
+            return response()->json(['error' => 'No post found, try another.'], 404);
+
+            // return $this->postRepository->destroy($id);
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
     }
 }

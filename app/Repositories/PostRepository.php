@@ -30,11 +30,13 @@ class PostRepository implements RepositoryInterface
      */
     public function all()
     {
-        $post = $this->model->all();
-        $set = $this->set('post', $post);
-        $get = $this->get('post');
+        if($this->get('post'))
+        {
+            $data = $this->model->all();
+            return $this->getAll('post', $data);
+        }
 
-        return $get;
+        return $this->model->all();
     }
 
     /**
@@ -60,28 +62,36 @@ class PostRepository implements RepositoryInterface
      * @param string $value
      * @return mixed
      */
-    public function show(string $value)
+    public function show(string $slug)
     {
-        if($this->has('post'))
-        {
-            $data = $this->get('post');
-            $key = 'slug';
+        $data = $this->get('post');
+        $key = 'slug';
+        $getSingle = $this->getSingle($data, $key, $slug);
 
-            return $this->getSingle($data, $key, $value);
+        if($getSingle)
+        {
+            return $getSingle;
         }
 
-        $post = $this->model->where('slug', $value)->first();
+        $post = $this->model->where('slug', $slug)->first();
         return $post;
+    
     }
 
     public function update(string $id, $requestData)
     {
-        return $this->model->whereId($id)->update($requestData); 
+        $findData = $this->model->findOrFail($id);
+        if($findData)
+        {
+            return $this->model->whereId($id)->update($requestData); 
+        }
+        
     }
 
     public function destroy(string $id)
     {
-
+        $post = $this->model->findOrFail($id);
+        return $post->delete();
     }
 
 }

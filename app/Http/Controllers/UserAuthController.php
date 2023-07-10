@@ -51,14 +51,15 @@ class UserAuthController extends Controller
             }
             
             return response()->json([
-                'error' => 'Unfortunately, there was an error resgistering your credentials. Our team has been notified and is working to resolve the issue. Please try again later.'
+                'error' => 'Unfortunately, there was an error resgistering your credentials. Our team has been notified and is working to resolve the issue. Please try again later.',
             ], 500);
             
         }
         catch(\Exception $e)
         {
             return response()->json([
-                'error' => 'Something went wrong.'
+                // 'error' => 'Something went wrong.'
+                'error' => $e->getTrace()
             ], 500);
         }
     }

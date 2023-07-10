@@ -28,7 +28,7 @@ trait RedisHelpers
 
     public function getSingle(iterable $data, string $key, string $slug)
     {
-        $output = null;
+        $output = '';
         foreach($data as $result)
         {
             if($result->$key == $slug)
@@ -36,8 +36,6 @@ trait RedisHelpers
                 $output = $result;
                 break;
             }
-
-            $value = response()->json(['error' => 'Resource not found.']);
         }
 
         return $output;
@@ -52,5 +50,13 @@ trait RedisHelpers
     public function set($key, $data)
     {
          return Redis::set($key, $data);
+    }
+
+    public function getAll($key, $data)
+    {
+        $set = $this->set($key, $data);
+        $get = $this->get($key);
+
+        return $get;
     }
 }

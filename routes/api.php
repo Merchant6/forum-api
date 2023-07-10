@@ -4,6 +4,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserAuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Redis;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,11 +25,14 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [UserAuthController::class, 'register']);
 Route::post('/login', [UserAuthController::class, 'login']);
 
+
+
 Route::middleware(['auth:api'])->group(function () {
     Route::get('/posts', [PostController::class, 'index']);
     Route::post('/posts', [PostController::class, 'store']);
     Route::get('/posts/{slug}', [PostController::class, 'show']);
-    Route::patch('/post/update/{id}', [PostController::class, 'update']);
+    Route::post('/post/update/{id}', [PostController::class, 'update']);
+    Route::delete('/post/delete/{id}', [PostController::class, 'destroy']);
 });
 
 
