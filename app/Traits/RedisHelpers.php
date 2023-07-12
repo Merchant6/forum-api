@@ -26,12 +26,12 @@ trait RedisHelpers
         return json_decode(Redis::get($key));
     }
 
-    public function getSingle(iterable $data, string $key, string $slug)
+    public function getSingle(iterable $data, string $key, string $searchParam)
     {
         $output = '';
         foreach($data as $result)
         {
-            if($result->$key == $slug)
+            if($result->$key == $searchParam)
             {
                 $output = $result;
                 break;
@@ -54,9 +54,15 @@ trait RedisHelpers
 
     public function getAll($key, $data)
     {
-        $set = $this->set($key, $data);
-        $get = $this->get($key);
+        
+        if(!$this->has($key))
+        {
+            $set = $this->set($key, $data);
+            $get = $this->get($key);
+            return $get;
+        }
 
+        $get = $this->get($key);
         return $get;
     }
 }

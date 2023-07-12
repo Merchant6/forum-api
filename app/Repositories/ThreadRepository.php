@@ -23,17 +23,18 @@ class ThreadRepository implements RepositoryInterface
         $this->model = $thread;
     }
 
-    
+
     /**
-     * Set and Get data from 
+     * Set and Get data from
      * @return mixed
      */
     public function all()
     {
-        if($this->get('thread'))
+        $data = $this->model->all();
+        $getAll = $this->getAll('thread', $data);
+        if($getAll)
         {
-            $data = $this->model->all();
-            return $this->getAll('thread', $data);
+            return $getAll;
         }
 
         return $this->model->all();
@@ -45,9 +46,11 @@ class ThreadRepository implements RepositoryInterface
      * @return mixed
      */
     public function store($data)
-    {   
+    {
         return $this->model::create([
-            //
+            'post_id' => $data['post_id'],
+            'user_id' => auth()->user()->id,
+            'content' => $data['content']
         ]);
     }
 
@@ -56,20 +59,22 @@ class ThreadRepository implements RepositoryInterface
      * @param string $value
      * @return mixed
      */
-    public function show(string $slug)
+    public function show(string $id)
     {
         $data = $this->get('thread');
-        $key = 'slug';
-        $getSingle = $this->getSingle($data, $key, $slug);
+        $key = 'id';
+        $searchParam = $id;
+
+        $getSingle = $this->getSingle($data, $key, $searchParam);
 
         if($getSingle)
         {
             return $getSingle;
         }
 
-        $thread = $this->model->where('slug', $slug)->first();
+        $thread = $this->model->where('id', $id)->first();
         return $thread;
-    
+
     }
 
     public function update(string $id, $requestData)
@@ -77,9 +82,9 @@ class ThreadRepository implements RepositoryInterface
         $findData = $this->model->findOrFail($id);
         if($findData)
         {
-            return $this->model->whereId($id)->update($requestData); 
+            return $this->model->whereId($id)->update($requestData);
         }
-        
+
     }
 
     public function destroy(string $id)

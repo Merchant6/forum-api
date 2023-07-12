@@ -70,7 +70,7 @@ class PostController extends Controller
 
         return response()->json([
             'error' => 'There was an issue creating your post, try again later.'
-        ], 400);
+        ], 404);
        }
 
        catch(\Exception $e)

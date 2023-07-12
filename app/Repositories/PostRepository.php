@@ -30,10 +30,11 @@ class PostRepository implements RepositoryInterface
      */
     public function all()
     {
-        if($this->get('post'))
+        $data = $this->model->all();
+        $getAll = $this->getAll('post', $data);
+        if($getAll)
         {
-            $data = $this->model->all();
-            return $this->getAll('post', $data);
+            return $getAll;
         }
 
         return $this->model->all();
@@ -66,7 +67,9 @@ class PostRepository implements RepositoryInterface
     {
         $data = $this->get('post');
         $key = 'slug';
-        $getSingle = $this->getSingle($data, $key, $slug);
+        $searchParam = $slug;
+
+        $getSingle = $this->getSingle($data, $key, $searchParam);
 
         if($getSingle)
         {
