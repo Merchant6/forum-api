@@ -41,6 +41,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/thread', [ThreadController::class, 'store']);
     Route::get('/thread/{id}', [ThreadController::class, 'show']);
     Route::post('/thread/update/{id}', [ThreadController::class, 'update']);
+    Route::get('/thread/delete/{id}', [ThreadController::class, 'destroy']);
 });
 
 

@@ -8,6 +8,7 @@ use App\Models\Thread;
 use App\Repositories\ThreadRepository;
 use App\Traits\RedisHelpers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 
 class ThreadController extends Controller
 {
@@ -115,6 +116,22 @@ class ThreadController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+
+            // $deleted = $this->threadRepository->destroy($id);
+
+            // if($deleted)
+            // {
+            //     return response()->json(['success' => 'The comment has been deleted'], 200);
+            // }
+          
+            // return response()->json(['error' => 'No comment found, try another.'], 404);
+            return Redis::get("thread{id:{$id}}");
+            // return $this->postRepository->destroy($id);
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+
+        
     }
 }

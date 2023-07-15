@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Interfaces\RepositoryInterface;
 use App\Models\Post;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Request;
 use App\Traits\RedisHelpers;
 use Illuminate\Support\Str;
@@ -31,13 +32,16 @@ class PostRepository implements RepositoryInterface
     public function all()
     {
         $data = $this->model->all();
-        $getAll = $this->getAll('post', $data);
+        $getAll = $this->getAll('post_*');
         if($getAll)
         {
             return $getAll;
         }
 
         return $this->model->all();
+
+        
+
     }
 
     /**

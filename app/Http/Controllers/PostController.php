@@ -32,13 +32,15 @@ class PostController extends Controller
      */
     public function index()
     {
-        $post = $this->postRepository->all();
-        if($post)
-        {
-            return response()->json([
-                'data' => $post
-            ], 200);
-        }
+        return $post = $this->postRepository->all();
+        // if($post)
+        // {
+        //     return response()->json([
+        //         'data' => $post
+        //     ], 200);
+        // }
+        
+        
     }
 
     /**
