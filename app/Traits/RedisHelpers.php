@@ -33,10 +33,20 @@ trait RedisHelpers
      */
     public function mget($keys)
     {
+        if(!$keys)
+        {
+            return false;
+        }
+
         $redisData = Redis::mget($keys);
         $decodedData = array_map('json_decode', $redisData);
 
         return $decodedData;
+    }
+
+    public function del($key)
+    {
+        return Redis::del($key);
     }
 
      /**
@@ -50,21 +60,17 @@ trait RedisHelpers
          return Redis::set($key, $data);
     }
 
-    public function getSingle(iterable $data, string $key, string $searchParam)
+    public function getSingle($key)
     {
-        $output = '';
-        foreach($data as $result)
-        {
-            if($result->$key == $searchParam)
-            {
-                $output = $result;
-                break;
-            }
-        }
-
-        return $output;
+        return $this->get($key);
     }
 
+
+    /**
+     * Get all key data from Redis cache using cursor command
+     * @param mixed $pattern
+     * @return mixed
+     */
     public function getAll($pattern)
     {
         

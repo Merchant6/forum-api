@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LoadDataController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ThreadController;
 use App\Http\Controllers\UserAuthController;
@@ -30,10 +31,11 @@ Route::post('/login', [UserAuthController::class, 'login']);
 
 Route::middleware(['auth:api'])->group(function () {
 
-
+    Route::get('/data', [LoadDataController::class, 'postKey']);
+    
     Route::get('/posts', [PostController::class, 'index']);
     Route::post('/posts', [PostController::class, 'store']);
-    Route::get('/posts/{slug}', [PostController::class, 'show']);
+    Route::get('/posts/{id}', [PostController::class, 'show']);
     Route::post('/post/update/{id}', [PostController::class, 'update']);
     Route::delete('/post/delete/{id}', [PostController::class, 'destroy']);
 

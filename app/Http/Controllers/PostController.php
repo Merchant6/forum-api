@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Redis;
 use App\Repositories\PostRepository;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PostController extends Controller
 {
@@ -32,15 +33,24 @@ class PostController extends Controller
      */
     public function index()
     {
-        return $post = $this->postRepository->all();
-        // if($post)
-        // {
-        //     return response()->json([
-        //         'data' => $post
-        //     ], 200);
-        // }
+        try
+        {
+            $post = $this->postRepository->all();
+        if($post)
+        {
+            return response()->json([
+                'data' => $post
+            ], 200);
+        }
         
-        
+        return response()->json([
+            'error' => 'There was an error fetching posts, try again letter.'
+        ], 404);            
+        }
+        catch(\Exception $e)
+        {
+            return $e->getMessage();
+        }
     }
 
     /**
@@ -58,12 +68,11 @@ class PostController extends Controller
     {
        try
        {
-        $data = $request->all();
         $val = $request->validated();
 
         if($val)
         {
-            $this->postRepository->store($data);
+            $this->postRepository->store($val);
 
             return response()->json([
                 'success' => 'Your post has been added.'
@@ -84,9 +93,9 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $slug)
+    public function show(string $id)
     {
-        return $this->postRepository->show($slug);
+        return $this->postRepository->show($id);
     }
 
     /**
@@ -102,19 +111,19 @@ class PostController extends Controller
      */
     public function update(PostDataUpdateRequest $request, string $id)
     {
-                $requestData = $request->input();
-                $updated =  $this->postRepository->update($id, $requestData);
-                
-                if($updated)
-                {
-                    return response()->json([
-                        'success' => 'Your post has been updated.'
-                    ], 200);
-                }
+        $requestData = $request->input();
+        $updated =  $this->postRepository->update($id, $requestData);
         
-                return response()->json([
-                    'error' => 'The post you want to update is removed or hidden.'
-                ], 400);
+        if($updated)
+        {
+            return response()->json([
+                'success' => 'Your post has been updated.'
+            ], 200);
+        }
+
+        return response()->json([
+            'error' => 'The post you want to update is removed or hidden.'
+        ], 400);
         
     }
 
