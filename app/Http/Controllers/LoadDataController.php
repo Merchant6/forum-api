@@ -13,7 +13,7 @@ class LoadDataController extends Controller
 
     public function postKey(PostRepository $postRepository)
     {
-        $key = 'post_';
+        $key = 'post';
         $data = $postRepository->all();
         return $this->loadDataFromDbToCache($key, $data);
     }

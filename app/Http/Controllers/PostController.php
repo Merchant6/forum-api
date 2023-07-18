@@ -111,7 +111,7 @@ class PostController extends Controller
      */
     public function update(PostDataUpdateRequest $request, string $id)
     {
-        $requestData = $request->input();
+        $requestData = $request->validated();
         $updated =  $this->postRepository->update($id, $requestData);
         
         if($updated)

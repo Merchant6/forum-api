@@ -85,18 +85,13 @@ class PostRepository implements RepositoryInterface
 
     public function update(string $id, $requestData)
     {
-        $findData = $this->model->findOrFail($id);
-        if($findData)
-        {
-            return $this->model->whereId($id)->update($requestData); 
-        }
-        
+        return $this->model->whereId($id)->update($requestData);    
     }
 
     public function destroy(string $id)
     {
-        $post = $this->model->findOrFail($id);
-        return $post->delete();
+        // $post = $this->model->findOrFail($id);
+        return $this->model->whereId($id)->first()->delete();
     }
 
 }

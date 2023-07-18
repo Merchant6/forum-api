@@ -4,7 +4,7 @@ namespace App\Observers;
 
 use App\Models\Post;
 use App\Traits\RedisHelpers;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class PostObserver
 {
@@ -23,6 +23,15 @@ class PostObserver
     }
 
     /**
+     * Handle the Post "updating" event.
+     */
+    public function updating(Post $post): void 
+    {
+        $post->slug = Str::slug($post->title);
+        $post->save();
+    }
+
+    /**
      * Handle the Post "updated" event.
      */
     public function updated(Post $post): void
@@ -32,6 +41,8 @@ class PostObserver
 
         $this->del($key);
         $this->set($key, $data);
+
+        \Log::info('Observer updated method triggered');
     }
 
     /**
@@ -39,7 +50,8 @@ class PostObserver
      */
     public function deleted(Post $post): void
     {
-        //
+        $key = 'post_'.$post->id;
+        $this->del($key);
     }
 
     /**
