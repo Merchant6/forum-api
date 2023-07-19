@@ -25,7 +25,7 @@ class ThreadStoreRequest extends FormRequest
     {
         return [
             'post_id' => ['required', 'integer'],
-            'user_id' => ['required', 'integer'],
+            // 'user_id' => ['required', 'integer'],
             'content' => ['required', 'string', 'min:1'],
         ];
     }

@@ -70,14 +70,14 @@ class PostObserver
     public function data(Post $post)
     {
         return json_encode([
-                'id' => $post->id,
-                'title' => $post->title,
-                'content' => $post->content,
-                'up_votes' => $post->up_votes,
-                'down_votes' => $post->down_votes,
-                'created_at' => $post->created_at,
-                'updated_at' => $post->updated_at,
-                'slug' => $post->slug,
+                    'id' => $post->id,
+                    'title' => $post->title,
+                    'content' => $post->content,
+                    'up_votes' => $post->up_votes,
+                    'down_votes' => $post->down_votes,
+                    'created_at' => $post->created_at,
+                    'updated_at' => $post->updated_at,
+                    'slug' => $post->slug,
                 ]);
     }
 }

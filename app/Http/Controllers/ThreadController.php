@@ -15,12 +15,12 @@ class ThreadController extends Controller
 
     use RedisHelpers;
     protected $threadRepository;
-    protected $threadModel;
+    protected $model;
 
     public function __construct(ThreadRepository $threadRepository ,Thread $thread)
     {
         $this->threadRepository = $threadRepository;
-        $this->threadModel = $thread;
+        $this->model = $thread;
     }
 
     /**
@@ -52,12 +52,11 @@ class ThreadController extends Controller
     {
         try
        {
-        $data = $request->all();
         $val = $request->validated();
 
         if($val)
         {
-            $this->threadRepository->store($data);
+            $this->threadRepository->store($val);
 
             return response()->json([
                 'success' => 'Your comment has been added.'
@@ -96,7 +95,7 @@ class ThreadController extends Controller
      */
     public function update(ThreadUpdateRequest $request, string $id)
     {
-        $requestData = $request->input();
+        $requestData = $request->validated();
         $updated =  $this->threadRepository->update($id, $requestData);
         
         if($updated)
@@ -118,15 +117,15 @@ class ThreadController extends Controller
     {
         try {
 
-            // $deleted = $this->threadRepository->destroy($id);
+            $deleted = $this->threadRepository->destroy($id);
 
-            // if($deleted)
-            // {
-            //     return response()->json(['success' => 'The comment has been deleted'], 200);
-            // }
+            if($deleted)
+            {
+                return response()->json(['success' => 'The post has been deleted'], 200);
+            }
           
-            // return response()->json(['error' => 'No comment found, try another.'], 404);
-            return Redis::get("thread{id:{$id}}");
+            return response()->json(['error' => 'No post found, try another.'], 404);
+
             // return $this->postRepository->destroy($id);
         } catch (\Exception $e) {
             return $e->getMessage();

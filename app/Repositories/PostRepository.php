@@ -48,9 +48,7 @@ class PostRepository implements RepositoryInterface
      * @return mixed
      */
     public function store($data)
-    {
-        $slug = Str::slug($data['title']);
-        
+    {        
         return $this->model->create([
             'category_id' => $data['category_id'],
             'user_id' => auth('api')->user()->id,

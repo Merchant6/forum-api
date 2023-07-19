@@ -1,0 +1,74 @@
+<?php
+
+namespace App\Observers;
+
+use App\Models\Thread;
+use App\Traits\RedisHelpers;
+
+class ThreadObserver
+{
+    use RedisHelpers;
+
+    protected $key = 'thread_';
+
+
+    /**
+     * Handle the Thread "created" event.
+     */
+    public function created(Thread $thread): void
+    {
+        $key = $this->key.$thread->id;
+        $data = $this->data($thread);
+
+        $this->set($key, $data);
+    }
+
+    /**
+     * Handle the Thread "updated" event.
+     */
+    public function updated(Thread $thread): void
+    {
+        $key = $this->key.$thread->id;
+        $data = $this->data($thread);
+
+        $this->del($key);
+        $this->set($key, $data);
+    }
+
+    /**
+     * Handle the Thread "deleted" event.
+     */
+    public function deleted(Thread $thread): void
+    {
+        $key = $this->key.$thread->id;
+        $this->del($key);
+    }
+
+    /**
+     * Handle the Thread "restored" event.
+     */
+    public function restored(Thread $thread): void
+    {
+        //
+    }
+
+    /**
+     * Handle the Thread "force deleted" event.
+     */
+    public function forceDeleted(Thread $thread): void
+    {
+        //
+    }
+
+    public function data(Thread $thread)
+    {
+        return json_encode([
+                    'id' => $thread->id,
+                    'post_id' => $thread->post_id,
+                    'user_id' => $thread->user_id,
+                    'content' => $thread->content,
+                    'created_at' => $thread->created_at,
+                    'updated_at' => $thread->updated_at,
+                ]);
+    }
+}

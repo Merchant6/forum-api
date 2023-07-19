@@ -31,7 +31,7 @@ Route::post('/login', [UserAuthController::class, 'login']);
 
 Route::middleware(['auth:api'])->group(function () {
 
-    Route::get('/data', [LoadDataController::class, 'postKey']);
+    Route::get('/data', [LoadDataController::class, 'load']);
     
     Route::get('/posts', [PostController::class, 'index']);
     Route::post('/posts', [PostController::class, 'store']);

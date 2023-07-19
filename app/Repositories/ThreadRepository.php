@@ -31,13 +31,13 @@ class ThreadRepository implements RepositoryInterface
     public function all()
     {
         $data = $this->model->all();
-        $getAll = $this->getAll('thread', $data);
+        $getAll = $this->getAll('thread*');
         if($getAll)
         {
             return $getAll;
         }
 
-        return $this->model->all();
+        return $data;
     }
 
     /**
@@ -49,7 +49,7 @@ class ThreadRepository implements RepositoryInterface
     {
         return $this->model::create([
             'post_id' => $data['post_id'],
-            'user_id' => auth()->user()->id,
+            'user_id' => auth('api')->user()->id,
             'content' => $data['content']
         ]);
     }
@@ -61,36 +61,31 @@ class ThreadRepository implements RepositoryInterface
      */
     public function show(string $id)
     {
-        $data = $this->get('thread');
-        $key = 'id';
-        $searchParam = $id;
+        // $data = $this->get('post');
+        $key = 'thread_'.$id;
+        // $searchParam = $slug;
 
-        $getSingle = $this->getSingle($data, $key, $searchParam);
+        $getSingle = $this->getSingle($key);
 
         if($getSingle)
         {
             return $getSingle;
         }
 
-        $thread = $this->model->where('id', $id)->first();
-        return $thread;
+        $post = $this->model->where('id', $id)->first();
+        return $post;
+    
 
     }
 
     public function update(string $id, $requestData)
     {
-        $findData = $this->model->findOrFail($id);
-        if($findData)
-        {
-            return $this->model->whereId($id)->update($requestData);
-        }
-
+        return $this->model->findOrFail($id)->update($requestData);
     }
 
     public function destroy(string $id)
     {
-        $key = $this->model->findOrFail($id);
-        return $key->delete();
+        return $this->model->whereId($id)->first()->delete();
     }
 
 }
