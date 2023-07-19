@@ -51,12 +51,11 @@ class PostRepository implements RepositoryInterface
     {
         $slug = Str::slug($data['title']);
         
-        return $this->model::create([
+        return $this->model->create([
             'category_id' => $data['category_id'],
             'user_id' => auth('api')->user()->id,
             'title' => $data['title'],
             'content' => $data['content'],
-            'slug' => Str::slug($data['title'])
         ]);
     }
 
@@ -85,12 +84,12 @@ class PostRepository implements RepositoryInterface
 
     public function update(string $id, $requestData)
     {
-        return $this->model->whereId($id)->update($requestData);    
+        return $this->model->findOrFail($id)->update($requestData);    
+    
     }
 
     public function destroy(string $id)
     {
-        // $post = $this->model->findOrFail($id);
         return $this->model->whereId($id)->first()->delete();
     }
 

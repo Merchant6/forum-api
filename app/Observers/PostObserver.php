@@ -23,15 +23,6 @@ class PostObserver
     }
 
     /**
-     * Handle the Post "updating" event.
-     */
-    public function updating(Post $post): void 
-    {
-        $post->slug = Str::slug($post->title);
-        $post->save();
-    }
-
-    /**
      * Handle the Post "updated" event.
      */
     public function updated(Post $post): void
@@ -41,8 +32,14 @@ class PostObserver
 
         $this->del($key);
         $this->set($key, $data);
+    }
 
-        \Log::info('Observer updated method triggered');
+    /**
+     * Handle the Post "usaving" event.
+     */
+    public function saving(Post $post): void 
+    {
+        $post->setAttribute('slug', Str::slug($post->title));
     }
 
     /**
