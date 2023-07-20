@@ -2,17 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Models\Thread;
+use App\Models\Reply;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class ThreadSeeder extends Seeder
+class ReplySeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        // Thread::factory(500)->create();
+        Reply::factory(100)->create();
     }
 }

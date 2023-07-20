@@ -2,11 +2,13 @@
 
 use App\Http\Controllers\LoadDataController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\ThreadController;
 use App\Http\Controllers\UserAuthController;
-use Illuminate\Http\Request;
+use App\Models\Post;
+use App\Models\Thread;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Redis;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +34,20 @@ Route::post('/login', [UserAuthController::class, 'login']);
 Route::middleware(['auth:api'])->group(function () {
 
     Route::get('/data', [LoadDataController::class, 'load']);
+
+    Route::get('int', function(){
+        $post = Post::get()->random()->id;
+        $thread = Thread::where('post_id', $post)->first()->id;
+
+        if($thread == null)
+        {
+            // $thread = 0;
+            return 'hello';
+        }
+
+        return ['post' => $post , 'thread' => $thread];
+    });
+
     
     Route::get('/posts', [PostController::class, 'index']);
     Route::post('/posts', [PostController::class, 'store']);
@@ -44,6 +60,12 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('/thread/{id}', [ThreadController::class, 'show']);
     Route::post('/thread/update/{id}', [ThreadController::class, 'update']);
     Route::get('/thread/delete/{id}', [ThreadController::class, 'destroy']);
+    
+    Route::get('/replies', [ReplyController::class, 'index']);
+    Route::post('/reply', [ReplyController::class, 'store']);
+    Route::get('/reply/{id}', [ReplyController::class, 'show']);
+    Route::post('/reply/update/{id}', [ReplyController::class, 'update']);
+    Route::get('/reply/delete/{id}', [ReplyController::class, 'destroy']);
 });
 
 

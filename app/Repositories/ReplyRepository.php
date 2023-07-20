@@ -3,12 +3,12 @@
 namespace App\Repositories;
 
 use App\Interfaces\RepositoryInterface;
-use App\Models\Thread;
+use App\Models\Reply;
 use App\Traits\RedisHelpers;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
 
-class ThreadRepository implements RepositoryInterface
+class ReplyRepository implements RepositoryInterface
 {
     use RedisHelpers;
 
@@ -20,10 +20,10 @@ class ThreadRepository implements RepositoryInterface
      * Summary of __construct
      * @param \App\Models\Post $post
      */
-    public function __construct(Dummy $dummy)
+    public function __construct(Reply $reply)
     {
-        $this->model = $thread;
-        $this->key = 'dummy*';
+        $this->model = $reply;
+        $this->key = 'reply_*';
     }
 
 
@@ -51,7 +51,10 @@ class ThreadRepository implements RepositoryInterface
     public function store($data)
     {
         return $this->model::create([
-            //
+            'post_id' => $data['post_id'],
+            'thread_id' => $data['thread_id'],
+            'user_id' => auth('api')->user()->id,
+            'content' => $data['content']
         ]);
     }
 
@@ -62,7 +65,7 @@ class ThreadRepository implements RepositoryInterface
      */
     public function show(string $id)
     {
-        $key = 'dummy_'.$id;
+        $key = 'reply_'.$id;
 
         $getSingle = $this->getSingle($key);
 
