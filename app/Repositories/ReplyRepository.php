@@ -33,7 +33,7 @@ class ReplyRepository implements RepositoryInterface
      */
     public function all()
     {
-        $data = $this->model->all();
+        $data = $this->model->getAllRecordsWithRelations();
         $getAll = $this->getAll($this->key);
         if($getAll)
         {

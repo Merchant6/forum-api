@@ -48,4 +48,21 @@ class Reply extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Returns this model's data with all related data like threads and replies
+     * @return object
+     */
+    public function getAllRecordsWithRelations()
+    {
+        $posts = $this->with(['user:id,username'])
+        // ->with(['threads' => function ($q) {
+        //     $q->select('id', 'post_id', 'user_id', 'content');
+        //     $q->with(['user:id,username']);
+        //     $q->with(['replies:id,post_id,thread_id,user_id,content', 'replies.user:id,username']);
+        // }])
+        ->get(['id', 'post_id', 'thread_id', 'user_id', 'content']);
+
+        return $posts;
+    }
 }

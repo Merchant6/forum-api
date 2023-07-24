@@ -6,6 +6,7 @@ use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\ThreadController;
 use App\Http\Controllers\UserAuthController;
 use App\Models\Post;
+use App\Models\Reply;
 use App\Models\Thread;
 use Illuminate\Support\Facades\Route;
 
@@ -36,16 +37,12 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('/data', [LoadDataController::class, 'load']);
 
     Route::get('int', function(){
-        $post = Post::get()->random()->id;
-        $thread = Thread::where('post_id', $post)->first()->id;
+        $post = Post::all();
+        $thread = Thread::all();
+        $reply = Reply::all();
+    
 
-        if($thread == null)
-        {
-            // $thread = 0;
-            return 'hello';
-        }
-
-        return ['post' => $post , 'thread' => $thread];
+        return [$post->count(), $thread->count(), $reply->count()];
     });
 
     

@@ -46,4 +46,35 @@ class Thread extends Model
     {
         return $this->hasMany(Reply::class);
     }
+
+    /**
+     * Returns this model's data with all related data like threads and replies
+     * @return object
+     */
+    public function getAllRecordsWithRelations()
+    {
+        $posts = $this->with(['user:id,username'])
+        ->with(['replies' => function ($q) {
+            $q->select('id', 'post_id', 'thread_id' ,'user_id', 'content');
+            $q->with(['user:id,username']);
+        }])
+        ->paginate(50);
+        // ->get(['id', 'user_id', 'post_id', 'content']);
+
+        return $posts;
+    }
+
+    public function getSingleRecordWithRelations(string $id)
+    {
+        $post = $this->where('id', $id)
+        ->with(['user:id,username'])
+        ->with(['replies' => function ($q) {
+            $q->select('id', 'post_id', 'thread_id', 'user_id', 'content');
+            $q->with(['user:id,username']);
+        }])
+        ->get(['id', 'post_id', 'user_id', 'content']);
+
+        return $post;
+    }
+
 }

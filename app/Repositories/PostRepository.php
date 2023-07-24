@@ -31,7 +31,7 @@ class PostRepository implements RepositoryInterface
      */
     public function all()
     {
-        $data = $this->model->all();
+        $data = $this->model->getAllRecordsWithRelations();
         $getAll = $this->getAll('post*');
         if($getAll)
         {
@@ -64,18 +64,16 @@ class PostRepository implements RepositoryInterface
      */
     public function show(string $id)
     {
-        // $data = $this->get('post');
         $key = 'post_'.$id;
-        // $searchParam = $slug;
 
-        $getSingle = $this->getSingle($key);
+        $getSingle = $this->get($key);
 
         if($getSingle)
         {
             return $getSingle;
         }
 
-        $post = $this->model->where('id', $id)->first();
+        $post = $this->model->getSingleRecordWithRelations($id);
         return $post;
     
     }

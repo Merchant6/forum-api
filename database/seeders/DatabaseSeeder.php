@@ -15,8 +15,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Post::factory(500)->create();
-        Thread::factory(500)->create();
-        Reply::factory(100)->create();
+        // Post::factory(500)->create();
+        // Thread::factory(500)->create();
+        // Reply::factory(100)->create();
+        Post::factory(2000)
+            ->hasThreads(2)
+            ->hasReplies(2)
+            ->create();
+
     }
 }

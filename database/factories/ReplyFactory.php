@@ -20,12 +20,11 @@ class ReplyFactory extends Factory
     public function definition(): array
     {
         $post = Post::get()->random()->id;
-        $thread = Thread::where('post_id', $post)->first()->id;
-        $threadId = $thread->id ?? 0;
+        $thread = Thread::where('post_id', $post)->first();
         
         return [
             'post_id' => $post,
-            'thread_id' => $threadId,
+            'thread_id' => !empty($thread) ? $thread->id :0,
             'user_id' => User::get()->random()->id,
             'content' => fake()->paragraph(1),
         ];

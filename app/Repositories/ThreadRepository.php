@@ -30,7 +30,7 @@ class ThreadRepository implements RepositoryInterface
      */
     public function all()
     {
-        $data = $this->model->all();
+        $data = $this->model->getAllRecordsWithRelations();
         $getAll = $this->getAll('thread*');
         if($getAll)
         {
@@ -65,14 +65,14 @@ class ThreadRepository implements RepositoryInterface
         $key = 'thread_'.$id;
         // $searchParam = $slug;
 
-        $getSingle = $this->getSingle($key);
+        $getSingle = $this->get($key);
 
-        if($getSingle)
-        {
-            return $getSingle;
-        }
+        // if($getSingle)
+        // {
+        //     return $getSingle;
+        // }
 
-        $post = $this->model->where('id', $id)->first();
+        $post = $this->model->getSingleRecordWithRelations($id);
         return $post;
     
 
