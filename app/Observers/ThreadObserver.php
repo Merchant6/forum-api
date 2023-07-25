@@ -31,14 +31,7 @@ class ThreadObserver
         $this->set($key, $data);
 
         //Updating the related post to reflect the updated thread
-        $post = new Post();
-        $postKey = $this->postKey.$thread->post_id;
-        $postData = $post->getSingleRecordWithRelations($thread->post_id);
-
-        error_log($postData);
-
-        $this->del($postKey);
-        $this->set($postKey, $postData);
+        $this->createKey($thread);
         
     }
 
@@ -54,12 +47,7 @@ class ThreadObserver
         $this->set($key, $data);
 
         //Updating the related post to reflect the updated thread
-        $post = new Post();
-        $postKey = $this->postKey.$thread->post_id;
-        $postData = $this->postObserver->data($post);
-
-        $this->del($postKey);
-        $this->set($postKey, $postData);
+        $this->createKey($thread);
 
     }
 
@@ -98,5 +86,15 @@ class ThreadObserver
                     'created_at' => $thread->created_at,
                     'updated_at' => $thread->updated_at,
                 ]);
+    }
+
+    public function createKey(Thread $thread)
+    {
+        $post = new Post();
+        $postKey = $this->postKey.$thread->post_id;
+        $postData = $post->getSingleRecordWithRelations($thread->post_id);
+
+        $this->del($postKey);
+        $this->set($postKey, $postData);
     }
 }

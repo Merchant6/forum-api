@@ -55,14 +55,18 @@ class Reply extends Model
      */
     public function getAllRecordsWithRelations()
     {
-        $posts = $this->with(['user:id,username'])
-        // ->with(['threads' => function ($q) {
-        //     $q->select('id', 'post_id', 'user_id', 'content');
-        //     $q->with(['user:id,username']);
-        //     $q->with(['replies:id,post_id,thread_id,user_id,content', 'replies.user:id,username']);
-        // }])
+        $reply = $this->with(['user:id,username'])
         ->get(['id', 'post_id', 'thread_id', 'user_id', 'content']);
 
-        return $posts;
+        return $reply;
+    }
+
+    public function getSingleRecordWithRelations(string $id)
+    {
+        $post = $this->where('id', $id)
+        ->with(['user:id,username'])
+        ->get(['id', 'post_id', 'user_id', 'content']);
+
+        return $post;
     }
 }

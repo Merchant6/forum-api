@@ -67,15 +67,15 @@ class ReplyRepository implements RepositoryInterface
     {
         $key = 'reply_'.$id;
 
-        $getSingle = $this->getSingle($key);
+        $getSingle = $this->get($key);
 
         if($getSingle)
         {
-            return $getSingle;
+            return ['redis' => $getSingle];
         }
 
-        $dummy = $this->model->where('id', $id)->first();
-        return $dummy;
+        $reply = $this->model->getSingleRecordWithRelations($id);
+        return $reply;
     
 
     }
