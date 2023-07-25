@@ -67,10 +67,10 @@ class ThreadRepository implements RepositoryInterface
 
         $getSingle = $this->get($key);
 
-        // if($getSingle)
-        // {
-        //     return $getSingle;
-        // }
+        if($getSingle)
+        {
+            return $getSingle;
+        }
 
         $post = $this->model->getSingleRecordWithRelations($id);
         return $post;

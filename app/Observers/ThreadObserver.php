@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Models\Post;
 use App\Models\Thread;
 use App\Traits\RedisHelpers;
 
@@ -10,6 +11,13 @@ class ThreadObserver
     use RedisHelpers;
 
     protected $key = 'thread_';
+    protected $postKey = 'post_';
+    protected $postObserver;
+
+    public function __construct(PostObserver $postObserver)
+    {
+        $this->postObserver = $postObserver;
+    }
 
 
     /**
@@ -17,7 +25,7 @@ class ThreadObserver
      */
     public function created(Thread $thread): void
     {
-        $key = $this->key.$thread->id;
+        $key = $this->key.$thread->id; 
         $data = $this->data($thread);
 
         $this->set($key, $data);
@@ -33,6 +41,15 @@ class ThreadObserver
 
         $this->del($key);
         $this->set($key, $data);
+
+        //Updating the related post to reflect the updated thread
+        $post = new Post();
+        $postKey = $this->postKey.$thread->post_id;
+        $postData = $this->postObserver->data($post);
+
+        $this->del($postKey);
+        $this->set($postKey, $postData);
+
     }
 
     /**
