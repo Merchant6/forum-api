@@ -29,6 +29,17 @@ class ThreadObserver
         $data = $this->data($thread);
 
         $this->set($key, $data);
+
+        //Updating the related post to reflect the updated thread
+        $post = new Post();
+        $postKey = $this->postKey.$thread->post_id;
+        $postData = $post->getSingleRecordWithRelations($thread->post_id);
+
+        error_log($postData);
+
+        $this->del($postKey);
+        $this->set($postKey, $postData);
+        
     }
 
     /**

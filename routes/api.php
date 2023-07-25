@@ -41,7 +41,7 @@ Route::middleware(['auth:api'])->group(function () {
         $thread = Thread::all();
         $reply = Reply::all();
     
-
+        error_log($post->count());
         return [$post->count(), $thread->count(), $reply->count()];
     });
 

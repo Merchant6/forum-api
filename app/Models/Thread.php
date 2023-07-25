@@ -58,8 +58,8 @@ class Thread extends Model
             $q->select('id', 'post_id', 'thread_id' ,'user_id', 'content');
             $q->with(['user:id,username']);
         }])
-        ->paginate(50);
-        // ->get(['id', 'user_id', 'post_id', 'content']);
+        // ->paginate(50);
+        ->get(['id', 'user_id', 'post_id', 'content']);
 
         return $posts;
     }
