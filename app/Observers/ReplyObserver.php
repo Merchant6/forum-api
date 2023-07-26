@@ -106,5 +106,7 @@ class ReplyObserver
 
         $this->del($postKey);
         $this->set($postKey, $postData);
+
+        error_log($post);
     }
 }
