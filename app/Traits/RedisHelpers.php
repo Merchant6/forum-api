@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use Illuminate\Support\Facades\Redis;
+use Laravel\Octane\Facades\Octane;
 
 trait RedisHelpers
 {
@@ -88,6 +89,11 @@ trait RedisHelpers
         $mget = $this->mget($keys);
         return $mget;
 
+    }
+
+    public function incr($key)
+    {
+        return Redis::incr($key);
     }
 
     //Only for development purposes to load seeded data to redis cache

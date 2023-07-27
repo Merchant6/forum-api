@@ -10,6 +10,7 @@ use App\Repositories\ReplyRepository;
 use App\Repositories\ThreadRepository;
 use App\Traits\RedisHelpers;
 use Illuminate\Http\Request;
+use Laravel\Octane\Facades\Octane;
 
 class LoadDataController extends Controller
 {
@@ -66,5 +67,11 @@ class LoadDataController extends Controller
         ];
 
         return $loadData;
+
+        // return Octane::concurrently([
+        //     fn () => $this->postKey($postRepository),
+        //     fn () => $this->threadKey($threadRepository),
+        //     fn () => $this->replyKey($replyRepository)
+        // ]);
     }
 }

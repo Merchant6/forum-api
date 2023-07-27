@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\LoadDataController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\PostUpvoteController;
 use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\ThreadController;
 use App\Http\Controllers\UserAuthController;
@@ -9,6 +10,9 @@ use App\Models\Post;
 use App\Models\Reply;
 use App\Models\Thread;
 use Illuminate\Support\Facades\Route;
+
+use Laravel\Octane\Facades\Octane;
+
 
 
 /*
@@ -36,7 +40,7 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::get('/data', [LoadDataController::class, 'load']);
 
-    Route::get('int', function(){
+    Route::get('/count', function(){
         $post = Post::all();
         $thread = Thread::all();
         $reply = Reply::all();
@@ -51,6 +55,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('/posts/{id}', [PostController::class, 'show']);
     Route::post('/post/update/{id}', [PostController::class, 'update']);
     Route::delete('/post/delete/{id}', [PostController::class, 'destroy']);
+    Route::get('/post/{id}/upvote', [PostUpvoteController::class, 'show']);
+    Route::post('/post/{id}/upvote', [PostUpvoteController::class, 'update']);
 
     Route::get('/threads', [ThreadController::class, 'index']);
     Route::post('/thread', [ThreadController::class, 'store']);

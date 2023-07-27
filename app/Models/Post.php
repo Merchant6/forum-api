@@ -93,7 +93,7 @@ class Post extends Model
             $q->with(['user:id,username']);
             $q->with(['replies:id,post_id,thread_id,user_id,content', 'replies.user:id,username']);
         }])
-        ->get(['id', 'user_id', 'category_id', 'title', 'content', 'slug']);
+        ->get(['id', 'user_id', 'category_id', 'title', 'content', 'slug', 'up_votes', 'down_votes']);
 
         return $post;
     }
